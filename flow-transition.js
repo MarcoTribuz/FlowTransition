@@ -159,7 +159,7 @@ FlowTransition.applyTransitions = function(newRoute, oldRoute) {
   _.each(FlowTransition._sections, function(parentElement, section) {
 
     // get the transition object or set it to null
-    var transitions = oldRoute && _fts[section] && _fts[section][newRoute] && _fts[section][newRoute][oldRoute] &&
+    const transitions = oldRoute && _fts[section] && _fts[section][newRoute] && _fts[section][newRoute][oldRoute] &&
       _fts[section][newRoute][oldRoute];
     hasTransition[section] = !!transitions;
 
