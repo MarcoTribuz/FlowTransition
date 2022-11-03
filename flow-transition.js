@@ -2,7 +2,7 @@ FlowTransition = {};
 FlowTransition.transitionStore = {};
 FlowTransition._sections = {};
 
-var _ready = false;
+let _ready = false;
 
 /**
  * The animations will be registered like usual velocity animations, using
@@ -22,17 +22,14 @@ Template.section.rendered = function() {
 };
 
 function _setUiHooks(parentElement, transitions) {
-  if (!parentElement) {
-    return;
-  }
-
-  var uiHooks = {};
+  if (!parentElement) return
+  let uiHooks = {};
 
   if (transitions) {
 
     if (transitions.txIn) {
       uiHooks.insertElement = function(node) {
-        var _tx = transitions.txIn;
+        const _tx = transitions.txIn;
 
         // set up the hooks to apply properties before insertion
         _.each(_tx.hook, function(value, property) {
@@ -51,7 +48,7 @@ function _setUiHooks(parentElement, transitions) {
 
     if (transitions.txOut) {
       uiHooks.removeElement = function(node) {
-        var _tx = transitions.txOut;
+        let _tx = transitions.txOut;
 
         // callback = node.remove + user defined callback
         _tx.options = _tx.options || {};
@@ -83,23 +80,18 @@ function _setUiHooks(parentElement, transitions) {
 }
 
 function _attachDeepObject() {
-  var missingKey = false;
+  let missingKey = false;
 
   _.reduce(arguments, function(mem, key) {
-
-    if (!key) {
-      missingKey = true;
-    }
-
+    if (!key) missingKey = true;
     return mem = mem[key] = mem[key] || {};
-
   }, this);
 
   return !missingKey;
 }
 
 function _attachFullPageAnimations() {
-  var _txName, _options, _property, _value, _valueOpposite;
+  let _txName, _options, _property, _value, _valueOpposite;
 
   // can either be a string name, or an object in the form {properties: {}, options: {}}
   this.txFull = (typeof this.txFull === 'string') ? {properties: this.txFull} : this.txFull;
@@ -138,10 +130,10 @@ function _attachFullPageAnimations() {
 // FlowTransition.transitionStore holds objects in the form:
 //    [section][newRoute][oldRoute][txDirection]{ TRANSITION OBJECT }
 FlowTransition.addTransition = function(transition) {
-  var _tx = transition;
-  var _fts = FlowTransition.transitionStore;
+  let _tx = transition;
+  let _fts = FlowTransition.transitionStore;
 
-  var attached = _attachDeepObject.apply(_fts, [_tx.section, _tx.to, _tx.from]);
+  let attached = _attachDeepObject.apply(_fts, [_tx.section, _tx.to, _tx.from]);
   if (!attached) {
     console.log("A FlowTransition transition object must have the parameters:" +
             " section, from, to; and should have the parameters: txFull or txIn & txOut.");
@@ -151,25 +143,25 @@ FlowTransition.addTransition = function(transition) {
     _attachFullPageAnimations.call(_tx);
   }
   if (_tx.txIn) {
-    var _txIn = (typeof _tx.txIn === 'string') ? {properties: _tx.txIn} : _tx.txIn;
+    let _txIn = (typeof _tx.txIn === 'string') ? {properties: _tx.txIn} : _tx.txIn;
     _fts[_tx.section][_tx.to][_tx.from].txIn = _txIn;
   }
   if (_tx.txOut) {
-    var _txOut = (typeof _tx.txOut === 'string') ? {properties: _tx.txOut} : _tx.txOut;
+    let _txOut = (typeof _tx.txOut === 'string') ? {properties: _tx.txOut} : _tx.txOut;
     _fts[_tx.section][_tx.to][_tx.from].txOut = _txOut;
   }
 };
 
 FlowTransition.applyTransitions = function(newRoute, oldRoute) {
-  var _fts = FlowTransition.transitionStore;
-  var hasTransition = {};
+  let _fts = FlowTransition.transitionStore;
+  let hasTransition = {};
 
   _.each(FlowTransition._sections, function(parentElement, section) {
 
     // get the transition object or set it to null
     var transitions = oldRoute && _fts[section] && _fts[section][newRoute] && _fts[section][newRoute][oldRoute] &&
       _fts[section][newRoute][oldRoute];
-    hasTransition[section] = transitions ? true : false;
+    hasTransition[section] = !!transitions;
 
     // when transitions is null, stale _uihooks will be removed from the parentElement
     _setUiHooks(parentElement, transitions);
@@ -186,7 +178,7 @@ FlowTransition.applyTransitions = function(newRoute, oldRoute) {
  * [{section1: contentTemplateName2}, {section2: contentTemplateName2}, ...]
  */
 FlowTransition.flow = function() {
-  var layoutAssignment = arguments;
+  let layoutAssignment = arguments;
 
   if (!_ready) { // make sure the initial Template sections are loaded
     Meteor.defer(function() {
@@ -196,12 +188,12 @@ FlowTransition.flow = function() {
     return;
   }
 
-  var _newLayout = _.extend.apply(null, layoutAssignment);
+  const _newLayout = _.extend.apply(null, layoutAssignment);
 
-  var flowCurrent = FlowRouter.current();
-  var newRoute = flowCurrent.route.name;
-  var oldRoute = flowCurrent.oldRoute ? flowCurrent.oldRoute.name : null;
-  var hasTransition = FlowTransition.applyTransitions(newRoute, oldRoute);
+  const flowCurrent = FlowRouter.current();
+  const newRoute = flowCurrent.route.name;
+  const oldRoute = flowCurrent.oldRoute ? flowCurrent.oldRoute.name : null;
+  const hasTransition = FlowTransition.applyTransitions(newRoute, oldRoute);
 
   _.each(FlowTransition._sections, function(parentElement, section) {
     var oldNode = parentElement.firstElementChild;
