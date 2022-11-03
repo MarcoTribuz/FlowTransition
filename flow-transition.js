@@ -1,6 +1,11 @@
-FlowTransition = {};
-FlowTransition.transitionStore = {};
-FlowTransition._sections = {};
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import {Meteor} from 'meteor/meteor'
+import {Template} from 'meteor/templating'
+
+let FlowTransition = {
+  transitionStore: {},
+  _sections: {}
+};
 
 let _ready = false;
 
