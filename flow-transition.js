@@ -196,15 +196,15 @@ FlowTransition.flow = function() {
   const hasTransition = FlowTransition.applyTransitions(newRoute, oldRoute);
 
   _.each(FlowTransition._sections, function(parentElement, section) {
-    var oldNode = parentElement.firstElementChild;
+    const oldNode = parentElement.firstElementChild;
     if (!_newLayout[section]) {
       if (oldNode) {
         Blaze.remove(Blaze.getView(oldNode));
       }
     }
     else {
-      var newContent = Template[_newLayout[section]];
-      var sameContent = (oldNode && (Blaze.getView(oldNode).name === newContent.viewName));
+      const newContent = Template[_newLayout[section]];
+      const sameContent = (oldNode && (Blaze.getView(oldNode).name === newContent.viewName));
       if (!sameContent || hasTransition[section]) {
         Blaze.render(newContent, parentElement);
         if (oldNode) {
