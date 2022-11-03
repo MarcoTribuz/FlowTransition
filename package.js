@@ -12,7 +12,7 @@ Package.onUse(function(api) {
   api.use('templating');
   api.use('underscore');
   api.use('velocityjs:velocityjs@1.2.1');
-  api.use('kadira:flow-router@2.1.1');
+  api.use('ostrio:flow-router-extra@3.9.0');
 
   api.addFiles([
     'section.html',
