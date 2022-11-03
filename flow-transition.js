@@ -16,8 +16,8 @@ let _ready = false;
  * of travel of the template. It can be moving: down, up, left, or right
  */
 
-Template.section.rendered = function() {
-  section = this.data.name;
+Template.section.onRendered = function() {
+  const section = this.data.name;
   FlowTransition._sections[section] = document.getElementById(section);
 };
 
