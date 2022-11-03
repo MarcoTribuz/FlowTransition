@@ -1,7 +1,7 @@
 # FlowTransition (mcissel:flow-transition)
 
 ## A Blaze Layout Renderer and Transitioner
-A Blaze layout renderer that uses VelocityJS powered transitions. It currently works only with [Kadira Flow-Router](https://github.com/kadirahq/flow-router) (previously meteorhacks:flow-router). This renderer enables:
+A Blaze layout renderer that uses VelocityJS powered transitions. It currently works only with [Ostrio Flow-Router](https://github.com/veliovgroup/Meteor-flow-router-meta). This renderer enables:
 
 * Rendering layouts to different sections (regions) using Blaze
 * Assign route-to-route transitions for each section
@@ -17,9 +17,9 @@ A Blaze layout renderer that uses VelocityJS powered transitions. It currently w
 
 ## Getting Started
 
-Add this package and kadira:flow-router (if you haven't already):
+Add this package and ostrio:flow-router-extra (if you haven't already):
 ~~~
-meteor add kadira:flow-router
+meteor add ostrio:flow-router-extra
 meteor add mcissel:flow-transition
 ~~~
 
