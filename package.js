@@ -1,13 +1,13 @@
 Package.describe({
-  name: 'mcissel:flow-transition',
-  version: '1.0.1',
-  summary: 'A transition and layout renderer for FlowRouter',
-  git: 'https://github.com/mcissel/FlowTransition',
+  name: 'marcotribuz:flow-transition',
+  version: '1.0.2',
+  summary: 'A transition and layout renderer for Ostrio FlowRouter',
+  git: 'https://github.com/MarcoTribuz/FlowTransition',
   documentation: 'README.md'
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.1');
+  api.versionsFrom('1.2');
   api.use('blaze');
   api.use('templating');
   api.use('underscore');
@@ -24,6 +24,6 @@ Package.onUse(function(api) {
 
 Package.onTest(function(api) {
   api.use('tinytest');
-  api.use('mcissel:flow-transition');
+  api.use('marcotribuz:flow-transition');
   api.addFiles('flow-transition-tests.js');
 });
