@@ -9,15 +9,17 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.2');
 
-  api.use('blaze');
-  api.use('templating');
+  api.use(['modules', 'ecmascript', 'promise'], 'client');
+  api.use(['templating', 'blaze'], 'client');
+
   api.use('underscore');
   api.use('velocityjs:velocityjs@1.2.1');
   api.use('ostrio:flow-router-extra@3.9.0');
 
-  api.addFiles('section.html', 'client');
+  /*api.addFiles('section.html', 'client');
   api.addFiles('flow-transition.js', 'client');
-  api.mainModule("FlowTransition", 'client');
+  api.export("FlowTransition", 'client');*/
+  api.mainModule('_init.js', 'client')
 });
 
 Package.onTest(function(api) {

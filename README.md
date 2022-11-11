@@ -1,4 +1,4 @@
-# FlowTransition (mcissel:flow-transition)
+# Flow (mcissel:flow-transition)
 
 ## A Blaze Layout Renderer and Transitioner
 A Blaze layout renderer that uses VelocityJS powered transitions. It currently works only with [Ostrio Flow-Router](https://github.com/veliovgroup/Meteor-flow-router-meta). This renderer enables:
@@ -47,19 +47,20 @@ You will need a few templates and a couple routes, before you can add a transiti
 ~~~
 
 And set up these routes. **Route names are required**, because that is how the transitions are assigned
+
 ~~~js
 if (Meteor.isClient) {
   FlowRouter.route("/", {
     name: "home", // required
-    action: function() {
-      FlowTransition.flow({body: "welcome"});
+    action: function () {
+      Flow.flow({body: "welcome"});
     }
   });
 
   FlowRouter.route("/articles", {
     name: "articles", // required
-    action: function() {
-      FlowTransition.flow({head: "header"}, {body: "articles"});
+    action: function () {
+      Flow.flow({head: "header"}, {body: "articles"});
     }
   });
 }
@@ -73,14 +74,14 @@ Now you can set up these transitions by assigning the:
 * Transition object (`txFull` or `txIn`/`txOut`)
 
 ~~~js
-FlowTransition.addTransition({
+Flow.addTransition({
   section: 'body',
   from: 'home',
   to: 'articles',
   txFull: 'left' // direction of motion, content will be moving left
 });
 
-FlowTransition.addTransition({
+Flow.addTransition({
   section: 'head',
   from: 'home',
   to: 'articles',
@@ -91,7 +92,7 @@ FlowTransition.addTransition({
       duration: 220,
       easing: 'spring',
       queue: false,
-      complete: function() {
+      complete: function () {
         console.log('You can add a callback function here');
       }
     }
@@ -114,13 +115,19 @@ and add the following code:
 
 ~~~js
 FlowRouter.route("/about",
-  name: "about",
-  action: function() {
-    FlowTransition.flow({head: "header"}, {body: "about_us"});
-  }
-});
+  name
+:
+"about",
+  action
+:
 
-FlowTransition.addTransition({
+function () {
+  Flow.flow({head: "header"}, {body: "about_us"});
+}
+})
+;
+
+Flow.addTransition({
   section: 'head',
   from: 'articles',
   to: 'about',
@@ -141,25 +148,34 @@ In the above case, the `head` section is re-rendered when navigating from '/arti
 Use a txFull transition object. The name is one of `[left, right, down, up]` referring to the content's direction of travel. Use just the string, or use it with an `options` object, just like a VelocityJS UI Pack animation. A pair transitions using both forms:
 
 ~~~js
-FlowTransition.addTransition({
+Flow.addTransition({
   section: 'body',
   from: 'home',
   to: 'articles',
   txFull: 'left'
 });
 
-FlowTransition.addTransition({
+Flow.addTransition({
   section: 'body',
   from: 'articles',
   to: 'home',
   txFull:
-    properties: 'right',
-    options: {
-      duration: 350,
-      easing: 'spring',
-      queue: false
-    }
-});
+  properties
+:
+'right',
+  options
+:
+{
+  duration: 350,
+    easing
+:
+  'spring',
+    queue
+:
+  false
+}
+})
+;
 ~~~
 
 Currently, if you use `txFull`, the Flow Transition package will not evaluate the `txIn` or `txOut` objects.

@@ -1,6 +1,7 @@
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import {Meteor} from 'meteor/meteor'
 import {Template} from 'meteor/templating'
+import {Blaze} from "meteor/blaze";
+import './section.html'
 
 let FlowTransition = {
   transitionStore: {},
@@ -183,6 +184,8 @@ FlowTransition.applyTransitions = function(newRoute, oldRoute) {
  * [{section1: contentTemplateName2}, {section2: contentTemplateName2}, ...]
  */
 FlowTransition.flow = function() {
+
+
   let layoutAssignment = arguments;
 
   if (!_ready) { // make sure the initial Template sections are loaded
