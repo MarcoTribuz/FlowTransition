@@ -196,6 +196,7 @@ FlowTransition.flow = function() {
     return;
   }
 
+
   const _newLayout = _.extend.apply(null, layoutAssignment);
 
   const flowCurrent = FlowRouter.current();

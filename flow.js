@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor'
 import {Template} from 'meteor/templating'
 import {Blaze} from "meteor/blaze";
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-//import './section.html'
+import './section.html'
 
 class Flow {
   constructor() {
@@ -10,9 +10,12 @@ class Flow {
     this._sections = {}
     this._ready = false
     const localSection = this._sections
-    console.log('CAZZO CI SONO')
+    console.log('Flow Constructor')
 
     Template.section = new Template('section', function () {});
+    Template.section.onCreated(function () {
+      console.log('OnCreated Template')
+    });
     Template.section.onRendered(function () {
       const section = this.data.name;
       console.log('CAZZO CI SONO Template', section)
@@ -21,7 +24,7 @@ class Flow {
   }
 
   _setUiHooks(parentElement, transitions) {
-    console.log('CAZZO SETUI')
+    console.log('Set UI Hooks')
     if (!parentElement) return
     let uiHooks = {};
 
@@ -79,18 +82,12 @@ class Flow {
     parentElement._uihooks = uiHooks;
   }
 
-  _attachDeepObject() {
-    let missingKey = false;
-
-    _.reduce(arguments, function(mem, key) {
-      if (!key) missingKey = true;
-      return mem = mem[key] = mem[key] || {};
-    }, this);
-
-    return !missingKey;
+  _attachDeepObject(section, to, from) {
+    return !!section && !!to && !!from
   }
 
   _attachFullPageAnimations() {
+    console.log('Attach Full page animation')
     let _txName, _options, _property, _value, _valueOpposite;
 
     // can either be a string name, or an object in the form {properties: {}, options: {}}
@@ -128,40 +125,34 @@ class Flow {
   }
 
   addTransition (transition) {
-    console.log('Add Transition', transition)
-    let _tx = transition;
-    let _fts = this._transitionStore;
-
-    let attached = this._attachDeepObject.apply(_fts, [_tx.section, _tx.to, _tx.from]);
+    let self = this
+    const {section, to, from, txIn, txOut, txFull} = transition
+    let attached = this._attachDeepObject(section, to, from);
     if (!attached) {
       console.log("A FlowTransition transition object must have the parameters:" +
         " section, from, to; and should have the parameters: txFull or txIn & txOut.");
     }
 
-    if (_tx.txFull) {
-      this._attachFullPageAnimations.call(_tx);
-    }
-    if (_tx.txIn) {
-      let _txIn = (typeof _tx.txIn === 'string') ? {properties: _tx.txIn} : _tx.txIn;
-      _fts[_tx.section][_tx.to][_tx.from].txIn = _txIn;
-    }
-    if (_tx.txOut) {
-      let _txOut = (typeof _tx.txOut === 'string') ? {properties: _tx.txOut} : _tx.txOut;
-      _fts[_tx.section][_tx.to][_tx.from].txOut = _txOut;
-    }
+    if (txFull) this._attachFullPageAnimations.call(transition);
+
+    if (!self._transitionStore.hasOwnProperty(transition.section)) self._transitionStore[transition.section] = {}
+    if (!self._transitionStore[transition.section].hasOwnProperty(transition.to)) self._transitionStore[transition.section][transition.to] = {}
+    if (!self._transitionStore[transition.section][transition.to].hasOwnProperty(transition.from)) self._transitionStore[transition.section][transition.to][transition.from] = {}
+
+    if (txIn && !self._transitionStore[transition.section][transition.to][transition.from].hasOwnProperty(transition.txIn)) self._transitionStore[transition.section][transition.to][transition.from]['txIn'] = (typeof transition.txIn === 'string') ? {properties: transition.txIn} : transition.txIn;
+    if (txOut && !self._transitionStore[transition.section][transition.to][transition.from].hasOwnProperty(transition.txIn)) self._transitionStore[transition.section][transition.to][transition.from]['txOut'] = (typeof transition.txOut === 'string') ? {properties: transition.txOut} : transition.txOut;
   }
 
   applyTransitions (newRoute, oldRoute) {
     console.log('apply transition', newRoute, oldRoute)
     let _fts = this._transitionStore;
-    console.log('apply transition', _fts)
+    console.log('apply transition FTS', _fts)
 
     let hasTransition = {};
     const setUiHooks = (parentElement, transition) => this._setUiHooks(parentElement, transition)
-    console.log('apply transition', setUiHooks)
-    console.log('test', this._sections)
+
     _.each(this._sections, function(parentElement, section) {
-      console.log("seciotn", section)
+      console.log("section in each", section)
       // get the transition object or set it to null
       const transitions = oldRoute && _fts[section] && _fts[section][newRoute] && _fts[section][newRoute][oldRoute] &&
         _fts[section][newRoute][oldRoute];
@@ -170,33 +161,37 @@ class Flow {
       // when transitions is null, stale _uihooks will be removed from the parentElement
       setUiHooks(parentElement, transitions);
     });
-    console.log("ciao has transition", hasTransition)
+    console.log("apply transition has transition", hasTransition)
     // let the caller know which sections have transitions
     return hasTransition;
   }
 
   flow(routerTo) {
+
+    console.log('FLOWROUTER FLOW', arguments, this._ready)
     const self = this
 
     let layoutAssignment = arguments;
     if (!this._ready) { // make sure the initial Template sections are loaded
       Meteor.defer(function() {
         self._ready = true;
-        self.flow(this, layoutAssignment);
+        self.flow.apply(self, layoutAssignment);
       });
       return;
     }
     console.log("routerTo",  routerTo)
     console.log("layout", layoutAssignment)
 
-    const cazzo = layoutAssignment[1]
-    console.log(cazzo)
+    const _newLayout = Object.assign({}, layoutAssignment);
 
-    const _newLayout = _.extend({}, cazzo[0]);
+    console.log('NEW LAYOUT', _newLayout)
 
     const flowCurrent = FlowRouter.current();
     const newRoute = flowCurrent.route.name;
     const oldRoute = flowCurrent.oldRoute ? flowCurrent.oldRoute.name : null;
+
+    console.log('OLD & NEW', oldRoute, newRoute)
+
     const hasTransition = self.applyTransitions(newRoute, oldRoute);
 
     console.log("section", this._sections)
