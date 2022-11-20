@@ -12,7 +12,7 @@ A Blaze layout renderer that uses VelocityJS powered transitions. It currently w
 ## Demo
 
 [flowtransition.meteor.com/](http://flowtransition.meteor.com/)
-
+flowtransit
 [https://github.com/mcissel/flowtransition-demo](https://github.com/mcissel/flowtransition-demo)
 
 ## Getting Started
@@ -28,7 +28,6 @@ You will need a few templates and a couple routes, before you can add a transiti
 ~~~html
 <body>
   {{> section name="head"}}
-  {{> section name="body"}}
 </body>
 
 <template name="header">
