@@ -9,18 +9,12 @@ A Blaze layout renderer that uses VelocityJS powered transitions. It currently w
 * Sections will only re-render when necessary or when explicitly requested
 * Not all sections have to be used on every route
 
-## Demo
-
-[flowtransition.meteor.com/](http://flowtransition.meteor.com/)
-flowtransit
-[https://github.com/mcissel/flowtransition-demo](https://github.com/mcissel/flowtransition-demo)
-
 ## Getting Started
 
 Add this package and ostrio:flow-router-extra (if you haven't already):
 ~~~
 meteor add ostrio:flow-router-extra
-meteor add mcissel:flow-transition
+meteor add marcotribuz:flow-transition
 ~~~
 
 You will need a few templates and a couple routes, before you can add a transition.
@@ -52,14 +46,7 @@ if (Meteor.isClient) {
   FlowRouter.route("/", {
     name: "home", // required
     action: function () {
-      Flow.flow({body: "welcome"});
-    }
-  });
-
-  FlowRouter.route("/articles", {
-    name: "articles", // required
-    action: function () {
-      Flow.flow({head: "header"}, {body: "articles"});
+      Flow.flow({head: "welcome"});
     }
   });
 }
@@ -104,27 +91,26 @@ When a section's content doesn't change, it will not re-render, UNLESS you assig
 
 ~~~html
 <template name="header">
-  <h1><a href="/">link to the Welcome page</a> <a href="/about">About Us</a></h1>
+  <h1>
+    <a href="/">link to the Welcome page</a>
+    <a href="/about">About Us</a>
+  </h1>
 </template>
 
-<template name="about_us"><h2>Mission Statement and Contact Info</h2></template>
+<template name="about_us">
+  <h2>Mission Statement and Contact Info</h2>
+</template>
 ~~~
 
 and add the following code:
 
 ~~~js
-FlowRouter.route("/about",
-  name
-:
-"about",
-  action
-:
-
-function () {
+FlowRouter.route("/about", {
+  name: "about",
+  action: function () {
   Flow.flow({head: "header"}, {body: "about_us"});
-}
-})
-;
+  }
+});
 
 Flow.addTransition({
   section: 'head',
@@ -135,9 +121,6 @@ Flow.addTransition({
 ~~~
 
 In the above case, the `head` section is re-rendered when navigating from '/articles' to '/about', but it will not be re-rendered when navigating from '/' to '/about'.
-
-~~~js
-~~~
 
 ## Transition Animations
 
@@ -158,23 +141,15 @@ Flow.addTransition({
   section: 'body',
   from: 'articles',
   to: 'home',
-  txFull:
-  properties
-:
-'right',
-  options
-:
-{
-  duration: 350,
-    easing
-:
-  'spring',
-    queue
-:
-  false
-}
-})
-;
+  txFull: {
+    properties: 'right',
+    options: {
+      duration: 350,
+      easing: 'spring',
+      queue: false
+    }
+  }
+});
 ~~~
 
 Currently, if you use `txFull`, the Flow Transition package will not evaluate the `txIn` or `txOut` objects.
