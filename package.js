@@ -7,12 +7,9 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.2');
+  api.versionsFrom('2.5.8');
 
-  api.use(['modules', 'ecmascript', 'promise', 'templating', 'blaze'], 'client');
-
-  api.use('velocityjs:velocityjs@1.2.1');
-  api.use('ostrio:flow-router-extra@3.9.0');
+  api.use(['modules', 'ecmascript', 'promise', 'templating@1.4.2', 'blaze@2.6.1', 'velocityjs:velocityjs@1.2.1', 'ostrio:flow-router-extra@3.9.0'], 'client');
 
   api.mainModule('_init.js', 'client')
 });
