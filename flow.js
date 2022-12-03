@@ -170,7 +170,6 @@ class Flow {
     let flowCurrent = null
     let newRoute = null
     let oldRoute = null
-    let hasTransition = false
 
     if (!this._ready) { // make sure the initial Template sections are loaded
       Meteor.defer(function() {
@@ -185,7 +184,6 @@ class Flow {
     oldRoute = flowCurrent.oldRoute ? flowCurrent.oldRoute.name : null;
 
     self.applyTransitions(newRoute, oldRoute);
-    //hasTransition = self.hasSectionTransition(routerToValue) //todo analyse
 
     const oldNode = self._parent.firstElementChild;
     if (oldNode) Blaze.remove(Blaze.getView(oldNode));

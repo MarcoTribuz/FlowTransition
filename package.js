@@ -19,6 +19,5 @@ Package.onUse(function(api) {
 
 Package.onTest(function(api) {
   api.use('tinytest');
-  api.use('marcotribuz:flow-transition');
   api.addFiles('flow-transition-tests.js');
 });
