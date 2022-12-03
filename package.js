@@ -1,6 +1,6 @@
 Package.describe({
   name: 'marcotribuz:flow-transition',
-  version: '1.0.6',
+  version: '1.0.7',
   summary: 'A transition and layout renderer for Ostrio FlowRouter',
   git: 'https://github.com/MarcoTribuz/FlowTransition',
   documentation: 'README.md'
